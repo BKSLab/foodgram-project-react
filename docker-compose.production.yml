@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3'
 
 volumes:
   pg_data:
@@ -12,18 +12,17 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
   backend:
-    build: ./backend/
+    image: bkslab/foodgram_backend
     env_file: .env
     volumes:
       - static:/backend_static
-      - media:/media/
+      - media:/media
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: bkslab/foodgram_frontend
+    env_file: .env
     command: cp -r /app/build/. /frontend_static/
     volumes:
-    - static:/frontend_static
+      - static:/frontend_static
   nginx:
     image: nginx:1.19.3
     ports:
