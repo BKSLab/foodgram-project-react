@@ -103,8 +103,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-# STATIC_URL = '/static/'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PATTERN = r'^[\w.@+-]+\Z'
@@ -124,16 +122,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 6,
 }
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ],
-
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'rest_framework.authentication.TokenAuthentication',
-#     ]
-# }
-
 DJOSER = {
     'HIDE_USERS': False,
     'LOGIN_FIELD': 'email',
@@ -148,23 +136,6 @@ DJOSER = {
         'current_user': 'users.serializers.CustomUserSerializer',
     },
 }
-
-
-# DJOSER = {
-#     'HIDE_USERS': False,
-#     'LOGIN_FIELD': 'email',
-#     'PERMISSIONS': {
-#         'user_create': ['rest_framework.permissions.AllowAny'],
-#         'user': ['rest_framework.permissions.IsAuthenticated'],
-#         'user_list': ['rest_framework.permissions.AllowAny'],
-
-#     },
-#     'SERIALIZERS': {
-#         'user_create': 'users.serializers.UserRegistrationSerializer',
-#         'user': 'users.serializers.TokenUserSerializer',
-#         'current_user': 'users.serializers.TokenUserSerializer',
-#     }
-# }
 
 EXTENSION_MIME_TYPE_XLSX = (
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
