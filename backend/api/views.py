@@ -25,7 +25,7 @@ from recipes.models import Favorites, Ingredient, Recipe, ShoppingList, Tag
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет для получения тегов.'''
+    """Вьюсет для получения тегов."""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
@@ -34,7 +34,7 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
-    '''Вьюсет для получения ингредиентов.'''
+    """Вьюсет для получения ингредиентов."""
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -45,7 +45,7 @@ class IngredientsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    '''Вьюсет для рецептов.'''
+    """Вьюсет для рецептов."""
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
@@ -55,7 +55,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     filterset_class = RecipeFilter
 
     def get_serializer_class(self):
-        '''Выбор сериализатора в зависимости от метода запроса.'''
+        """Выбор сериализатора в зависимости от метода запроса."""
         if self.request.method == 'GET':
             return RecipeReadSerializer
         return CreateUpdateDeleteRecipeSerializer
@@ -68,7 +68,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,),
     )
     def favorite(self, request, *args, **kwargs):
-        '''Добавление и удаление рецепта из избранного.'''
+        """Добавление и удаление рецепта из избранного."""
         recipe_id = kwargs.get('id')
         recipe = get_object_or_404(Recipe, id=recipe_id)
         user = request.user
@@ -113,7 +113,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,),
     )
     def shopping_cart(self, request, *args, **kwargs):
-        '''Добавление и удаление рецепта из списка покупок.'''
+        """Добавление и удаление рецепта из списка покупок."""
         recipe_id = kwargs.get('id')
         recipe = get_object_or_404(Recipe, id=recipe_id)
         user = request.user
@@ -156,7 +156,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=(IsAuthenticated,),
     )
     def download_shopping_cart(self, request):
-        '''Отправка списка покупок пользователю в формате xlsx.'''
+        """Отправка списка покупок пользователю в формате xlsx."""
         file = preparing_data_for_sending(request)
         return FileResponse(
             open(file, 'rb'),

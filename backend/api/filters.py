@@ -4,7 +4,7 @@ from recipes.models import Ingredient, Recipe
 
 
 class IngredientsFilter(rest_framework.FilterSet):
-    '''Фильтрация ингредиентов.'''
+    """Фильтрация ингредиентов."""
 
     name = rest_framework.CharFilter(
         field_name='name', lookup_expr='istartswith'
@@ -16,7 +16,7 @@ class IngredientsFilter(rest_framework.FilterSet):
 
 
 class RecipeFilter(rest_framework.FilterSet):
-    '''Фильтрация рецептов.'''
+    """Фильтрация рецептов."""
 
     author = rest_framework.CharFilter(field_name='author__id')
     tags = rest_framework.CharFilter(field_name='tags__slug')
@@ -38,14 +38,3 @@ class RecipeFilter(rest_framework.FilterSet):
         if value and self.request.user.is_authenticated:
             return queryset.filter(shoppinglists__user=self.request.user)
         return queryset
-
-
-# class RecipeFilter(rest_framework.FilterSet):
-#     '''Фильтрация рецептов.'''
-
-#     author = rest_framework.CharFilter(field_name='author__id')
-#     tags = rest_framework.CharFilter(field_name='tags__slug')
-
-#     class Meta:
-#         model = Recipe
-#         fields = ('author', 'tags')

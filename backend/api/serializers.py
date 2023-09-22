@@ -17,7 +17,7 @@ from users.serializers import CustomUserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для ингредиентов.'''
+    """Сериалайзер для ингредиентов."""
 
     class Meta:
         model = Ingredient
@@ -29,7 +29,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для тегов.'''
+    """Сериалайзер для тегов."""
 
     class Meta:
         model = Tag
@@ -42,7 +42,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientRecipeSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для ингредиентов в рецепте.'''
+    """Сериалайзер для ингредиентов в рецепте."""
 
     amount = serializers.SerializerMethodField()
 
@@ -57,7 +57,7 @@ class IngredientRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeReadSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для обработки GET запросов к рецептам.'''
+    """Сериалайзер для обработки GET запросов к рецептам."""
 
     tags = TagSerializer(read_only=True, many=True)
     ingredients = serializers.SerializerMethodField()
@@ -82,7 +82,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         )
 
     def get_ingredients(self, obj):
-        '''Получение игредиента в рецепте.'''
+        """Получение игредиента в рецепте."""
         return obj.ingredients.values(
             'id',
             'name',
@@ -91,16 +91,16 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_in_shopping_cart(self, obj):
-        '''Обработка поля, отвечающего за добавление рецепта в корзину.'''
+        """Обработка поля, отвечающего за добавление рецепта в корзину."""
         return status_check(self.context.get('request'), obj, ShoppingList)
 
     def get_is_favorited(self, obj):
-        '''Обработка поля, отвечающего за добавление рецепта в избранное.'''
+        """Обработка поля, отвечающего за добавление рецепта в избранное."""
         return status_check(self.context.get('request'), obj, Favorites)
 
 
 class ProductsInRecipeSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для колличества ингредиентов в рецепте.'''
+    """Сериалайзер для колличества ингредиентов в рецепте."""
 
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
@@ -112,7 +112,7 @@ class ProductsInRecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_amount(self, value):
-        '''Валидация поля amount.'''
+        """Валидация поля amount."""
         if value <= 0:
             raise serializers.ValidationError(
                 'Нужно указать количество ингредиента в рецепте'
@@ -121,7 +121,7 @@ class ProductsInRecipeSerializer(serializers.ModelSerializer):
 
 
 class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для создания, изменения и удаления рецептов.'''
+    """Сериалайзер для создания, изменения и удаления рецептов."""
 
     ingredients = ProductsInRecipeSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
@@ -146,7 +146,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        '''Создание рецептов.'''
+        """Создание рецептов."""
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         validated_data['author'] = self.context.get('request').user
@@ -156,7 +156,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def to_representation(self, instance):
-        '''Изменение выходных данных сериализатора.'''
+        """Изменение выходных данных сериализатора."""
         return RecipeReadSerializer(
             instance,
             context={
@@ -166,7 +166,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        '''Обновление рецептов.'''
+        """Обновление рецептов."""
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         ProductsInRecipe.objects.filter(recipe=instance).delete()
@@ -183,7 +183,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         return instance
 
     def validate_tags(self, value):
-        '''Валидация поля tags.'''
+        """Валидация поля tags."""
         if len(value) == 0:
             raise serializers.ValidationError(
                 'Создать рецепт без указания хотя бы одного тега нельзя.'
@@ -195,7 +195,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_ingredients(self, value):
-        '''Валидация поля ingredients.'''
+        """Валидация поля ingredients."""
         if len(value) == 0:
             raise serializers.ValidationError(
                 'Создать рецепт без указания хотя бы одного ингредиента нельзя'
@@ -207,7 +207,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         return value
 
     def validate_cooking_time(self, value):
-        '''Валидация поля cooking_time.'''
+        """Валидация поля cooking_time."""
         if value <= 0:
             raise serializers.ValidationError(
                 'Время приготовления рецепта не может быть равным 0'
@@ -216,7 +216,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
 
 
 class FavoritesSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для избранного.'''
+    """Сериалайзер для избранного."""
 
     class Meta:
         model = Favorites
@@ -224,7 +224,7 @@ class FavoritesSerializer(serializers.ModelSerializer):
 
 
 class ShoppingListSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для списка покупок.'''
+    """Сериалайзер для списка покупок."""
 
     class Meta:
         model = ShoppingList
@@ -232,7 +232,7 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
 
 class FavoriteAndShoppingListRecipeSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для избранного и списка покупок в рецепте.'''
+    """Сериалайзер для избранного и списка покупок в рецепте."""
 
     class Meta:
         model = Recipe

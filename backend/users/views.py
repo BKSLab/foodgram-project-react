@@ -12,7 +12,7 @@ from users.serializers import SubscriptionsSerializer
 
 
 class UserRegistrationViewSet(UserViewSet):
-    '''viewset для регистрации пользователей на сайте.'''
+    """viewset для регистрации пользователей на сайте."""
 
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
@@ -24,7 +24,7 @@ class UserRegistrationViewSet(UserViewSet):
         permission_classes=(IsAuthenticated,),
     )
     def subscriptions(self, request, *args, **kwargs):
-        '''Выдача подписок пользователя.'''
+        """Выдача подписок пользователя."""
         authors = self.paginate_queryset(
             Subscription.objects.filter(
                 user=request.user,
@@ -46,7 +46,7 @@ class UserRegistrationViewSet(UserViewSet):
         permission_classes=(IsAuthenticated,),
     )
     def subscribe(self, request, *args, **kwargs):
-        '''Подписка и отписка от авторов.'''
+        """Подписка и отписка от авторов."""
         user = request.user
         author = get_object_or_404(User, id=kwargs.get('id'))
         check_subscription = Subscription.objects.filter(

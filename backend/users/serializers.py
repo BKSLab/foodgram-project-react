@@ -9,7 +9,7 @@ from users.models import User
 
 
 class UserRegistrationSerializer(UserCreateSerializer):
-    '''Сериалайзер для регистрации пользователей.'''
+    """Сериалайзер для регистрации пользователей."""
 
     username = serializers.RegexField(regex=settings.PATTERN, max_length=150)
 
@@ -34,7 +34,7 @@ class UserRegistrationSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    '''Сериалайзер для работы с пользователями.'''
+    """Сериалайзер для работы с пользователями."""
 
     is_subscribed = serializers.SerializerMethodField()
 
@@ -50,7 +50,7 @@ class CustomUserSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        '''Проверка подписки пользователя на автора рецепта.'''
+        """Проверка подписки пользователя на автора рецепта."""
         return check_subscribed(
             self.context.get('request'),
             Subscription,
@@ -59,7 +59,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class SubscriptionsRecipesSerializer(serializers.ModelSerializer):
-    '''Сериалайзер для рецепта в подписках.'''
+    """Сериалайзер для рецепта в подписках."""
 
     class Meta:
         model = Recipe
@@ -72,7 +72,7 @@ class SubscriptionsRecipesSerializer(serializers.ModelSerializer):
 
 
 class SubscriptionsSerializer(UserSerializer):
-    '''Сериалайзер для работы с подписками.'''
+    """Сериалайзер для работы с подписками."""
 
     email = serializers.EmailField(source='author.email')
     id = serializers.IntegerField(source='author.id')
@@ -97,7 +97,7 @@ class SubscriptionsSerializer(UserSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        '''Проверка подписки пользователя на автора рецепта.'''
+        """Проверка подписки пользователя на автора рецепта."""
         return check_subscribed(
             self.context.get('request'),
             Subscription,
@@ -105,11 +105,11 @@ class SubscriptionsSerializer(UserSerializer):
         )
 
     def get_recipes_count(self, obj):
-        '''Получение количество рецептов автора.'''
+        """Получение количество рецептов автора."""
         return Recipe.objects.filter(author__username=obj).count()
 
     def get_recipes(self, obj):
-        '''Получение рецептов автора.'''
+        """Получение рецептов автора."""
         recipes_limit = self.context.get('request').GET.get('recipes_limit')
         if recipes_limit is None:
             return SubscriptionsRecipesSerializer(

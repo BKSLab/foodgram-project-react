@@ -9,7 +9,7 @@ from recipes.models import ProductsInRecipe
 
 
 def status_check(request, serializable_object, model):
-    '''Проверка наличия запрашиваемого объекта в БД.'''
+    """Проверка наличия запрашиваемого объекта в БД."""
     return (
         request.user.is_authenticated
         and model.objects.filter(
@@ -20,7 +20,7 @@ def status_check(request, serializable_object, model):
 
 
 def adding_ingredients(instance, ingredients):
-    '''Добавление ингредиентов к рецепту при создании и обновлении.'''
+    """Добавление ингредиентов к рецепту при создании и обновлении."""
     for ingredient in ingredients:
         ProductsInRecipe.objects.create(
             recipe=instance,
@@ -71,10 +71,12 @@ def preparing_data_for_sending(request):
 
 
 def check_repetitions(value):
+    """Поиск повторений тегов и ингредиентов в рецепте."""
     return {field for field in value if value.count(field) > 1}
 
 
 def check_subscribed(request, model, obj):
+    """Проверка подписки."""
     return (
         request.user.is_authenticated
         and model.objects.filter(

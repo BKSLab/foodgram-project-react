@@ -4,14 +4,14 @@ from .models import User
 
 
 class BaseAdmin(admin.ModelAdmin):
-    '''Общий класс для регистрации моделей.'''
+    """Общий класс для регистрации моделей."""
 
     empty_value_display = '-пусто-'
 
 
 @admin.register(User)
 class UserAdmin(BaseAdmin):
-    '''Регистрация модели пользователей.'''
+    """Регистрация модели пользователей."""
 
     list_display = (
         'username',

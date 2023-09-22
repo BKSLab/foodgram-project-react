@@ -5,7 +5,7 @@ from foodgram_backend import settings
 
 
 class User(AbstractUser):
-    '''Модель для работы с пользователями.'''
+    """Модель для работы с пользователями."""
 
     username = models.CharField(
         'уникальный юзернейм',

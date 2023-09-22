@@ -12,14 +12,14 @@ from .models import (
 
 
 class BaseAdmin(admin.ModelAdmin):
-    '''Общий класс для регистрации моделей.'''
+    """Общий класс для регистрации моделей."""
 
     empty_value_display = '-пусто-'
 
 
 @admin.register(ProductsInRecipe)
 class ProductsInRecipeAdmin(BaseAdmin):
-    '''Регистрация модели продуктов в рецепте.'''
+    """Регистрация модели продуктов в рецепте."""
 
     list_display = (
         'ingredient',
@@ -29,7 +29,7 @@ class ProductsInRecipeAdmin(BaseAdmin):
 
 @admin.register(Tag)
 class TagAdmin(BaseAdmin):
-    '''Регистрация модели тегов.'''
+    """Регистрация модели тегов."""
 
     list_display = (
         'id',
@@ -41,7 +41,7 @@ class TagAdmin(BaseAdmin):
 
 @admin.register(Ingredient)
 class IngredientAdmin(BaseAdmin):
-    '''Регистрация модели ингредиентов'''
+    """Регистрация модели ингредиентов."""
 
     list_display = (
         'name',
@@ -52,14 +52,14 @@ class IngredientAdmin(BaseAdmin):
 
 
 class RecipeInline(admin.TabularInline):
-    '''Отображение рецептов в админзоне.'''
+    """Отображение рецептов в админзоне."""
 
     model = Recipe.ingredients.through
 
 
 @admin.register(Recipe)
 class RecipeAdmin(BaseAdmin):
-    '''Регистрация модели рецептов.'''
+    """Регистрация модели рецептов."""
 
     model = Recipe
     inlines = [
@@ -84,27 +84,27 @@ class RecipeAdmin(BaseAdmin):
 
     @admin.display(description='рецепт добавлен в избранное')
     def count_favorites(self, obj):
-        '''Количество рецептов, добавленных в избранное.'''
+        """Количество рецептов, добавленных в избранное."""
         return obj.favorites.count()
 
 
 @admin.register(Favorites)
 class FavoritesAdmin(BaseAdmin):
-    '''Регистрация модели избранное.'''
+    """Регистрация модели избранное."""
 
     list_display = ('recipe', 'user')
 
 
 @admin.register(Subscription)
 class SubscriptionAdmin(BaseAdmin):
-    '''Регистрация модели подписок на авторов.'''
+    """Регистрация модели подписок на авторов."""
 
     list_display = ('user', 'author')
 
 
 @admin.register(ShoppingList)
 class ShoppingListAdmin(BaseAdmin):
-    '''Регистрация модели списка покупок.'''
+    """Регистрация модели списка покупок."""
 
     list_display = (
         'recipe',

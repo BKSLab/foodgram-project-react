@@ -6,7 +6,7 @@ from users.models import User
 
 
 class Tag(models.Model):
-    '''Модель для работы с тегами.'''
+    """Модель для работы с тегами."""
 
     name = models.CharField(
         'название тега',
@@ -45,7 +45,7 @@ class Tag(models.Model):
 
 
 class Ingredient(models.Model):
-    '''Модель для работы с ингредиентами.'''
+    """Модель для работы с ингредиентами."""
 
     name = models.CharField(
         'название ингредиента',
@@ -68,7 +68,7 @@ class Ingredient(models.Model):
 
 
 class Recipe(models.Model):
-    '''Модель для работы с рецептами.'''
+    """Модель для работы с рецептами."""
 
     author = models.ForeignKey(
         User,
@@ -124,7 +124,7 @@ class Recipe(models.Model):
 
 
 class ProductsInRecipe(models.Model):
-    '''Модель для работы с ингредиентами в рецепте.'''
+    """Модель для работы с ингредиентами в рецепте."""
 
     recipe = models.ForeignKey(
         Recipe,
@@ -167,6 +167,8 @@ class ProductsInRecipe(models.Model):
 
 
 class BaseModelForShoppingListAndFavorites(models.Model):
+    """Базовая модель для избранного и списка покупок."""
+
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -192,7 +194,7 @@ class BaseModelForShoppingListAndFavorites(models.Model):
 
 
 class ShoppingList(BaseModelForShoppingListAndFavorites):
-    '''Модель для работы со списком покупок.'''
+    """Модель для работы со списком покупок."""
 
     class Meta:
         verbose_name = 'список покупок'
@@ -207,7 +209,7 @@ class ShoppingList(BaseModelForShoppingListAndFavorites):
 
 
 class Favorites(BaseModelForShoppingListAndFavorites):
-    '''Модель для работы с избранным.'''
+    """Модель для работы с избранным."""
 
     class Meta:
         verbose_name = 'избранное'
@@ -222,7 +224,7 @@ class Favorites(BaseModelForShoppingListAndFavorites):
 
 
 class Subscription(models.Model):
-    '''Модель для работы с подписками.'''
+    """Модель для работы с подписками."""
 
     user = models.ForeignKey(
         User,

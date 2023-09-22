@@ -2,7 +2,7 @@ from rest_framework import permissions
 
 
 class ReadOrAddUpdateDelRecipePermissions(permissions.BasePermission):
-    '''Права доступа к рецептам.'''
+    """Права доступа к рецептам."""
 
     def has_permission(self, request, view):
         return (

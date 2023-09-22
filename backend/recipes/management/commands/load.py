@@ -8,7 +8,7 @@ from recipes.models import Ingredient
 
 
 class Command(BaseCommand):
-    '''Команда для загрузки ингредиентов из csv файла.'''
+    """Команда для загрузки ингредиентов из csv файла."""
 
     help = "loading data into db from scv file"
 
