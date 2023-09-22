@@ -1,6 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from foodgram_backend import settings
+
 
 class User(AbstractUser):
     '''Модель для работы с пользователями.'''
@@ -18,7 +20,7 @@ class User(AbstractUser):
     first_name = models.CharField('имя', max_length=150)
     last_name = models.CharField('фамилия', max_length=150)
     password = models.CharField(max_length=150)
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ('email', 'first_name', 'last_name')
 
     class Meta:
         verbose_name = 'пользователь'
@@ -29,7 +31,5 @@ class User(AbstractUser):
             )
         ]
 
-    def __str__(self):
-        if self.username is not None:
-            return self.username
-        return f'{self.Meta.verbose_name} с {self.pk}'
+    def __str__(self) -> str:
+        return self.username[: settings.SHOW_CHARACTERS]

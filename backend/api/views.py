@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from api.filters import IngredientsFilter, RecipeFilter
 from api.pagination import RecipesPagination
-from api.permissions import RecipePermissions
+from api.permissions import ReadOrAddUpdateDelRecipePermissions
 from api.serializers import (
     CreateUpdateDeleteRecipeSerializer,
     FavoriteAndShoppingListRecipeSerializer,
@@ -49,34 +49,10 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeReadSerializer
-    permission_classes = (RecipePermissions,)
+    permission_classes = (ReadOrAddUpdateDelRecipePermissions,)
     pagination_class = RecipesPagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-
-    def get_queryset(self):
-        '''Фильтрация рецептов.'''
-        queryset = Recipe.objects.all()
-        req_dict = dict(self.request.query_params)
-
-        if 'is_favorited' in req_dict and 'is_in_shopping_cart' in req_dict:
-            flag_request = self.request.query_params.get('is_favorited')
-            flag_request = self.request.query_params.get('is_in_shopping_cart')
-            if flag_request is not None and int(flag_request) == 1:
-                return queryset.filter(
-                    favorites__user=self.request.user,
-                    shoppinglists__user=self.request.user,
-                )
-        if 'is_favorited' in req_dict:
-            flag_request = self.request.query_params.get('is_favorited')
-            if flag_request is not None and int(flag_request) == 1:
-                return queryset.filter(favorites__user=self.request.user)
-            return queryset
-        if 'is_in_shopping_cart' in req_dict:
-            flag_request = self.request.query_params.get('is_in_shopping_cart')
-            if flag_request is not None and int(flag_request) == 1:
-                return queryset.filter(shoppinglists__user=self.request.user)
-        return queryset
 
     def get_serializer_class(self):
         '''Выбор сериализатора в зависимости от метода запроса.'''

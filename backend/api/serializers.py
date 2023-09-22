@@ -1,11 +1,10 @@
+from django.db import transaction
 from django.db.models import F
 
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
-from api.utils import adding_ingredients, status_check
-from foodgram_backend import settings
+from api.utils import adding_ingredients, check_repetitions, status_check
 from recipes.models import (
     Favorites,
     Ingredient,
@@ -31,14 +30,6 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class TagSerializer(serializers.ModelSerializer):
     '''Сериалайзер для тегов.'''
-
-    slug = serializers.RegexField(
-        regex=settings.PATTERN_SLUG,
-        max_length=200,
-        validators=[
-            UniqueValidator(queryset=Tag.objects.all()),
-        ],
-    )
 
     class Meta:
         model = Tag
@@ -122,7 +113,7 @@ class ProductsInRecipeSerializer(serializers.ModelSerializer):
 
     def validate_amount(self, value):
         '''Валидация поля amount.'''
-        if value == 0:
+        if value <= 0:
             raise serializers.ValidationError(
                 'Нужно указать количество ингредиента в рецепте'
             )
@@ -138,15 +129,6 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         many=True,
     )
     image = Base64ImageField()
-    name = serializers.CharField(
-        max_length=200,
-        validators=[
-            UniqueValidator(
-                queryset=Recipe.objects.all(),
-                message='Рецепт с таким названием уже существует',
-            )
-        ],
-    )
 
     class Meta:
         model = Recipe
@@ -162,6 +144,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             'cooking_time': {'required': True},
         }
 
+    @transaction.atomic
     def create(self, validated_data):
         '''Создание рецептов.'''
         ingredients = validated_data.pop('ingredients')
@@ -181,6 +164,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             },
         ).data
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         '''Обновление рецептов.'''
         ingredients = validated_data.pop('ingredients')
@@ -202,7 +186,11 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         '''Валидация поля tags.'''
         if len(value) == 0:
             raise serializers.ValidationError(
-                'Создать рецепт без указания хотя бы одного тега нельзя'
+                'Создать рецепт без указания хотя бы одного тега нельзя.'
+            )
+        if check_repetitions(value):
+            raise serializers.ValidationError(
+                'Повторение тегов не допускается.'
             )
         return value
 
@@ -212,11 +200,15 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Создать рецепт без указания хотя бы одного ингредиента нельзя'
             )
+        if check_repetitions([ingredient.get('id') for ingredient in value]):
+            raise serializers.ValidationError(
+                'Повторение ингредиентов не допускается.'
+            )
         return value
 
     def validate_cooking_time(self, value):
         '''Валидация поля cooking_time.'''
-        if value == 0:
+        if value <= 0:
             raise serializers.ValidationError(
                 'Время приготовления рецепта не может быть равным 0'
             )

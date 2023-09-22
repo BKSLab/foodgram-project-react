@@ -10,9 +10,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'data_is_hidden_from_you')
 
-DEBUG = os.getenv('DEBUG', 'False')
+DEBUG = os.getenv('DEBUG', default=False)
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS', default='127.0.0.1, localhost'
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -108,6 +110,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PATTERN = r'^[\w.@+-]+\Z'
 
 PATTERN_SLUG = r'^[-a-zA-Z0-9_]+$'
+
+PATTERN_HEX = r'#[0-9A-Fa-f]{6}$'
+
+SHOW_CHARACTERS = 40
 
 AUTH_USER_MODEL = 'users.User'
 

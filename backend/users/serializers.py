@@ -2,6 +2,7 @@ from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 
+from api.utils import check_subscribed
 from foodgram_backend import settings
 from recipes.models import Recipe, Subscription
 from users.models import User
@@ -50,13 +51,11 @@ class CustomUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         '''Проверка подписки пользователя на автора рецепта.'''
-        request = self.context.get('request')
-        if request.auth is None:
-            return False
-        return Subscription.objects.filter(
-            author=obj.pk,
-            user=request.user.pk,
-        ).exists()
+        return check_subscribed(
+            self.context.get('request'),
+            Subscription,
+            obj,
+        )
 
 
 class SubscriptionsRecipesSerializer(serializers.ModelSerializer):
@@ -99,14 +98,11 @@ class SubscriptionsSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         '''Проверка подписки пользователя на автора рецепта.'''
-        request = self.context.get('request')
-        if request.auth is None:
-            return False
-
-        return Subscription.objects.filter(
-            author=obj.author,
-            user=request.user.pk,
-        ).exists()
+        return check_subscribed(
+            self.context.get('request'),
+            Subscription,
+            obj,
+        )
 
     def get_recipes_count(self, obj):
         '''Получение количество рецептов автора.'''

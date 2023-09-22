@@ -10,12 +10,13 @@ from recipes.models import ProductsInRecipe
 
 def status_check(request, serializable_object, model):
     '''Проверка наличия запрашиваемого объекта в БД.'''
-    if request.auth is None:
-        return False
-    return model.objects.filter(
-        recipe=serializable_object.pk,
-        user=request.user.pk,
-    ).exists()
+    return (
+        request.user.is_authenticated
+        and model.objects.filter(
+            recipe=serializable_object.pk,
+            user=request.user.pk,
+        ).exists()
+    )
 
 
 def adding_ingredients(instance, ingredients):
@@ -67,3 +68,17 @@ def preparing_data_for_sending(request):
         list.append(ingredient)
     shopping_cart.save(file_name)
     return file_name
+
+
+def check_repetitions(value):
+    return {field for field in value if value.count(field) > 1}
+
+
+def check_subscribed(request, model, obj):
+    return (
+        request.user.is_authenticated
+        and model.objects.filter(
+            author=obj.pk,
+            user=request.user.pk,
+        ).exists()
+    )
