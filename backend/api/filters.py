@@ -25,7 +25,7 @@ class RecipeFilter(rest_framework.FilterSet):
         to_field_name='slug',
     )
     # AllValuesMultipleFilter(field_name='tags__slug')
-    tags = rest_framework.CharFilter(field_name='tags__slug')
+    # tags = rest_framework.CharFilter(field_name='tags__slug')
     is_favorited = rest_framework.BooleanFilter(method='check_is_favorited')
     is_in_shopping_cart = rest_framework.BooleanFilter(
         method='check_is_in_shopping_cart'
