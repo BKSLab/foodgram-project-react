@@ -5,44 +5,6 @@ from django.db import models
 from foodgram_backend import settings
 from users.models import User
 
-# class Tag(models.Model):
-#     """Модель для работы с тегами."""
-
-#     name = models.CharField(
-#         'название тега',
-#         max_length=200,
-#         unique=True,
-#     )
-#     color = models.CharField(
-#         'цвет в HEX',
-#         validators=[
-#             validators.RegexValidator(
-#                 regex=settings.PATTERN_HEX,
-#                 message='Введенная строка не соответствует стандарту HEX.',
-#             ),
-#         ],
-#         max_length=7,
-#         unique=True,
-#     )
-#     slug = models.SlugField(
-#         'уникальный slug тега',
-#         validators=[
-#             validators.RegexValidator(
-#                 regex=settings.PATTERN_SLUG,
-#                 message='Использованы некорректные символы',
-#             ),
-#         ],
-#         max_length=200,
-#         unique=True,
-#     )
-
-#     class Meta:
-#         verbose_name = 'тег'
-#         verbose_name_plural = 'теги'
-
-#     def __str__(self) -> str:
-#         return self.name[: settings.SHOW_CHARACTERS]
-
 
 class Tag(models.Model):
     """Модель для работы с тегами."""
@@ -270,35 +232,6 @@ class Favorites(BaseModelForShoppingListAndFavorites):
                 name='unique_user_recipe',
             )
         ]
-
-
-# class Subscription(models.Model):
-#     """Модель для работы с подписками."""
-
-#     user = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         related_name='follower',
-#         verbose_name='подписчик',
-#     )
-#     author = models.ForeignKey(
-#         User,
-#         on_delete=models.CASCADE,
-#         verbose_name='автор рецепта',
-#         related_name='following',
-#     )
-
-#     class Meta:
-#         verbose_name = 'подписчик'
-#         verbose_name_plural = 'подписчики'
-#         constraints = [
-#             models.UniqueConstraint(
-#                 fields=['user', 'author'], name='unique_user_author'
-#             )
-#         ]
-
-#     def __str__(self) -> str:
-#         return self.author.username[: settings.SHOW_CHARACTERS]
 
 
 class Subscription(models.Model):
