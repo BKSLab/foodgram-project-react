@@ -19,7 +19,7 @@ class RecipeFilter(rest_framework.FilterSet):
     """Фильтрация рецептов."""
 
     author = rest_framework.CharFilter(field_name='author__id')
-    tags = rest_framework.ModelMultipleChoiceFilter(
+    tags = rest_framework.AllValuesMultipleFilter(
         queryset=Tag.objects.all(),
         field_name='tags__slug',
         to_field_name='slug',
