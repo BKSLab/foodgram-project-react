@@ -79,15 +79,15 @@ class Tag(models.Model):
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
 
-    # def clean(self):
-    #     if Tag.objects.filter(
-    #         color=self.color.lower(),
-    #     ).exists():
-    #         raise ValidationError('Тег с таким цветом уже существует .')
+    def clean(self):
+        if Tag.objects.filter(
+            color=self.color.lower(),
+        ).exists():
+            raise ValidationError('Тег с таким цветом уже существует .')
 
-    # def save(self, *args, **kwargs):
-    #     self.color = self.color.lower()
-    #     return super(Tag, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        self.color = self.color.lower()
+        return super(Tag, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.name[: settings.SHOW_CHARACTERS]
