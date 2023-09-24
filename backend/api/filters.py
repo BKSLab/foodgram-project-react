@@ -1,6 +1,6 @@
 from django_filters import rest_framework
 
-from recipes.models import Ingredient, Recipe
+from recipes.models import Ingredient, Recipe, Tag
 
 
 class IngredientsFilter(rest_framework.FilterSet):
@@ -19,10 +19,11 @@ class RecipeFilter(rest_framework.FilterSet):
     """Фильтрация рецептов."""
 
     author = rest_framework.CharFilter(field_name='author__id')
-    # tags = rest_framework.ModelMultipleChoiceFilter(
-    #     queryset=Tag.objects.all(),
-    #     field_name='tags__slug',
-    # )
+    tags = rest_framework.ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        field_name='tags__slug',
+        to_field_name='slug',
+    )
     # AllValuesMultipleFilter(field_name='tags__slug')
     tags = rest_framework.CharFilter(field_name='tags__slug')
     is_favorited = rest_framework.BooleanFilter(method='check_is_favorited')
