@@ -55,8 +55,8 @@ class RecipeInline(admin.TabularInline):
     """Отображение рецептов в админке."""
 
     model = Recipe.ingredients.through
-    # extra = 1
-    # min_num = 1
+    extra = 1
+    min_num = 1
 
 
 @admin.register(Recipe)
