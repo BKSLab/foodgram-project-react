@@ -52,7 +52,7 @@ class IngredientAdmin(BaseAdmin):
 
 
 class RecipeInline(admin.TabularInline):
-    """Отображение рецептов в админзоне."""
+    """Отображение рецептов в админке."""
 
     model = Recipe.ingredients.through
     # extra = 1
