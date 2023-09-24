@@ -1,8 +1,47 @@
 from django.core import validators
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from foodgram_backend import settings
 from users.models import User
+
+# class Tag(models.Model):
+#     """Модель для работы с тегами."""
+
+#     name = models.CharField(
+#         'название тега',
+#         max_length=200,
+#         unique=True,
+#     )
+#     color = models.CharField(
+#         'цвет в HEX',
+#         validators=[
+#             validators.RegexValidator(
+#                 regex=settings.PATTERN_HEX,
+#                 message='Введенная строка не соответствует стандарту HEX.',
+#             ),
+#         ],
+#         max_length=7,
+#         unique=True,
+#     )
+#     slug = models.SlugField(
+#         'уникальный slug тега',
+#         validators=[
+#             validators.RegexValidator(
+#                 regex=settings.PATTERN_SLUG,
+#                 message='Использованы некорректные символы',
+#             ),
+#         ],
+#         max_length=200,
+#         unique=True,
+#     )
+
+#     class Meta:
+#         verbose_name = 'тег'
+#         verbose_name_plural = 'теги'
+
+#     def __str__(self) -> str:
+#         return self.name[: settings.SHOW_CHARACTERS]
 
 
 class Tag(models.Model):
@@ -40,8 +79,18 @@ class Tag(models.Model):
         verbose_name = 'тег'
         verbose_name_plural = 'теги'
 
+    def clean(self):
+        if Tag.objects.filter(
+            color=self.color.lower(),
+        ).exists():
+            raise ValidationError('Тег с таким цветом уже существует .')
+
+    def save(self, *args, **kwargs):
+        self.color = self.color.lower()
+        return super(Tag, self).save(*args, **kwargs)
+
     def __str__(self) -> str:
-        return self.name[: settings.SHOW_CHARACTERS]
+        return self.name[: settings.SHOW_WORDS]
 
 
 class Ingredient(models.Model):
@@ -223,8 +272,37 @@ class Favorites(BaseModelForShoppingListAndFavorites):
         ]
 
 
+# class Subscription(models.Model):
+#     """Модель для работы с подписками."""
+
+#     user = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         related_name='follower',
+#         verbose_name='подписчик',
+#     )
+#     author = models.ForeignKey(
+#         User,
+#         on_delete=models.CASCADE,
+#         verbose_name='автор рецепта',
+#         related_name='following',
+#     )
+
+#     class Meta:
+#         verbose_name = 'подписчик'
+#         verbose_name_plural = 'подписчики'
+#         constraints = [
+#             models.UniqueConstraint(
+#                 fields=['user', 'author'], name='unique_user_author'
+#             )
+#         ]
+
+#     def __str__(self) -> str:
+#         return self.author.username[: settings.SHOW_CHARACTERS]
+
+
 class Subscription(models.Model):
-    """Модель для работы с подписками."""
+    '''Модель для работы с подписками.'''
 
     user = models.ForeignKey(
         User,
@@ -245,8 +323,14 @@ class Subscription(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'], name='unique_user_author'
-            )
+            ),
         ]
 
+    def clean(self):
+        if self.user == self.author:
+            raise ValidationError(
+                'Пользователь не может подписаться сам на себя.'
+            )
+
     def __str__(self) -> str:
-        return self.author.username[: settings.SHOW_CHARACTERS]
+        return self.author.username[: settings.SHOW_WORDS]

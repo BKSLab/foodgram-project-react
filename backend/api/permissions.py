@@ -15,8 +15,7 @@ class ReadOrAddUpdateDelRecipePermissions(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS
             or (request.method == 'POST' and request.user.is_authenticated)
             or (
-                request.method == 'PATCH'
-                or request.method == 'DELETE'
+                (request.method == 'PATCH' or request.method == 'DELETE')
                 and request.user == obj.author
             )
         )
