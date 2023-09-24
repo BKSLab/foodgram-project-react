@@ -90,7 +90,7 @@ class Tag(models.Model):
     #     return super(Tag, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return self.name[: settings.SHOW_WORDS]
+        return self.name[: settings.SHOW_CHARACTERS]
 
 
 class Ingredient(models.Model):
@@ -333,4 +333,4 @@ class Subscription(models.Model):
             )
 
     def __str__(self) -> str:
-        return self.author.username[: settings.SHOW_WORDS]
+        return self.author.username[: settings.SHOW_CHARACTERS]
