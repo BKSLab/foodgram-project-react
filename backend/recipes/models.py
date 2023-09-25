@@ -151,12 +151,12 @@ class ProductsInRecipe(models.Model):
         'количество ингредиента в рецепте',
         validators=[
             validators.MaxValueValidator(
+                100000,
                 message='Указано слишком большое количество ингредиента.',
-                limit_value=100000,
             ),
             validators.MinValueValidator(
+                0,
                 message='Нужно указать количество ингредиента в рецепте.',
-                limit_value=0,
             ),
         ],
     )
@@ -168,8 +168,8 @@ class ProductsInRecipe(models.Model):
         ordering = ('recipe__name',)
         constraints = [
             models.UniqueConstraint(
-                fields=['ingredient', 'recipe'],
-                name='unique_ingredient_recipe',
+                fields=['recipe', 'ingredient'],
+                name='unique_recipe_ingredient',
             )
         ]
 
