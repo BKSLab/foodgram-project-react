@@ -200,10 +200,10 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Создать рецепт без ингредиентов нельзя'
             )
-        # if check_repetitions([ingredient.get('id') for ingredient in value]):
-        #     raise serializers.ValidationError(
-        #         'Повторение ингредиентов не допускается.'
-        #     )
+        if check_repetitions([ingredient.get('id') for ingredient in value]):
+            raise serializers.ValidationError(
+                'Повторение ингредиентов не допускается.'
+            )
         return value
 
     def validate_cooking_time(self, value):
