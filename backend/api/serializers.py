@@ -198,13 +198,11 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         """Валидация поля ingredients."""
         if len(value) == 0:
             raise serializers.ValidationError(
-                'Создать рецепт без указания хотя бы одного ингредиента нельзя'
+                'Создать рецепт без ингредиентов нельзя'
             )
         if check_repetitions([ingredient.get('id') for ingredient in value]):
-            raise serializers.ValidationError(
-                {
-                    'ingredients': ['Повторение ингредиентов.']
-                }
+            raise ValueError(
+                'Повторение ингредиентов не допускается.'
             )
         return value
 
