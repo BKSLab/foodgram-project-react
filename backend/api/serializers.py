@@ -144,6 +144,18 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             'cooking_time': {'required': True},
         }
 
+    def validate(self, data):
+        ingredients = data.get('ingredients')
+        if check_repetitions([
+            ingredient.get('id') for ingredient in ingredients]
+        ):
+            raise serializers.ValidationError(
+                {
+                    'ingredients': 'Повторение ингредиентов не допускается.'
+                }
+            )
+        return data
+
     @transaction.atomic
     def create(self, validated_data):
         """Создание рецептов."""
@@ -200,10 +212,10 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Создать рецепт без ингредиентов нельзя'
             )
-        if check_repetitions([ingredient.get('id') for ingredient in value]):
-            raise serializers.ValidationError(
-                'Повторение ингредиентов не допускается.'
-            )
+        # if check_repetitions([ingredient.get('id') for ingredient in value]):
+        #     raise serializers.ValidationError(
+        #         'Повторение ингредиентов не допускается.'
+        #     )
         return value
 
     def validate_cooking_time(self, value):
