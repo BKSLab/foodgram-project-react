@@ -60,6 +60,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeReadSerializer
         return CreateUpdateDeleteRecipeSerializer
 
+    def create(self, request, *args, **kwargs):
+        serializer = CreateUpdateDeleteRecipeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return super().create(request, *args, **kwargs)
+
+    def update(self, request, *args, **kwargs):
+        serializer = CreateUpdateDeleteRecipeSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return super().update(request, *args, **kwargs)
+
     @action(
         detail=False,
         url_path=r'(?P<id>\d+)/favorite',

@@ -1,4 +1,4 @@
-# from django.db import transaction
+from django.db import transaction
 from django.db.models import F
 
 from drf_extra_fields.fields import Base64ImageField
@@ -144,7 +144,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             'cooking_time': {'required': True},
         }
 
-    # @transaction.atomic
+    @transaction.atomic
     def create(self, validated_data):
         """Создание рецептов."""
         ingredients = validated_data.pop('ingredients')
@@ -164,7 +164,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             },
         ).data
 
-    # @transaction.atomic
+    @transaction.atomic
     def update(self, instance, validated_data):
         """Обновление рецептов."""
         ingredients = validated_data.pop('ingredients')
@@ -203,7 +203,6 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
         if check_repetitions([ingredient.get('id') for ingredient in value]):
             raise serializers.ValidationError(
                 {
-                    'status_code': 400,
                     'ingredients': ['Повторение ингредиентов не доступно.']
                 }
             )
