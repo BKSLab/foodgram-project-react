@@ -201,7 +201,8 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
                 'Создать рецепт без ингредиентов нельзя'
             )
         if check_repetitions([ingredient.get('id') for ingredient in value]):
-            raise ValueError(
+            from django.core.exceptions import ValidationError
+            raise ValidationError(
                 'Повторение ингредиентов не допускается.'
             )
         return value
