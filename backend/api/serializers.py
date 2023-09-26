@@ -202,10 +202,13 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             )
         if check_repetitions([ingredient.get('id') for ingredient in value]):
             raise serializers.ValidationError(
-                [
-                    'Повторение ингредиентов не доступно.'
-                ]
+                {'errors': ['так не пойдет, ты уже подписался на автора']}
             )
+            # raise serializers.ValidationError(
+            #     [
+            #         'Повторение ингредиентов не доступно.'
+            #     ]
+            # )
         return value
 
     def validate_cooking_time(self, value):
