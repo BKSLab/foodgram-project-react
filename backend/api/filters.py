@@ -1,14 +1,13 @@
-from django_filters import rest_framework
 from django_filters.rest_framework import FilterSet, filters
 
 from recipes.models import Ingredient, Recipe, Tag
 from users.models import User
 
 
-class IngredientsFilter(rest_framework.FilterSet):
+class IngredientsFilter(FilterSet):
     """Фильтрация ингредиентов."""
 
-    name = rest_framework.CharFilter(
+    name = filters.CharFilter(
         field_name='name', lookup_expr='istartswith'
     )
 
