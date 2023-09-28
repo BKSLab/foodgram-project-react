@@ -202,7 +202,11 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             )
         if check_repetitions([ingredient.get('id') for ingredient in value]):
             raise serializers.ValidationError(
-                'Повторение ингредиентов не доступно.'
+                {
+                    'non_field_errors': [
+                        'Повторение ингредиентов не доступно.'
+                    ]
+                }
             )
         return value
 
