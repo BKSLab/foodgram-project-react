@@ -144,6 +144,20 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             'cooking_time': {'required': True},
         }
 
+    def validate(self, data):
+        ingredients = data.get('ingredients')
+        if not ingredients:
+            raise serializers.ValidationError(
+                'Создать рецепт без ингредиентов нельзя'
+            )
+        if check_repetitions([
+            ingredient.get('id') for ingredient in ingredients]
+        ):
+            raise serializers.ValidationError(
+                'Повторение ингредиентов не допускается.'
+            )
+        return data
+    
     @transaction.atomic
     def create(self, validated_data):
         """Создание рецептов."""
@@ -194,21 +208,21 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
             )
         return value
 
-    def validate_ingredients(self, value):
-        """Валидация поля ingredients."""
-        if len(value) == 0:
-            raise serializers.ValidationError(
-                'Создать рецепт без ингредиентов нельзя'
-            )
-        if check_repetitions([ingredient.get('id') for ingredient in value]):
-            raise serializers.ValidationError(
-                {
-                    'non_field_errors': [
-                        'Повторение ингредиентов не доступно.'
-                    ]
-                }
-            )
-        return value
+    # def validate_ingredients(self, value):
+    #     """Валидация поля ingredients."""
+    #     if len(value) == 0:
+    #         raise serializers.ValidationError(
+    #             'Создать рецепт без ингредиентов нельзя'
+    #         )
+    #     if check_repetitions([ingredient.get('id') for ingredient in value]):
+    #         raise serializers.ValidationError(
+    #             {
+    #                 'non_field_errors': [
+    #                     'Повторение ингредиентов не доступно.'
+    #                 ]
+    #             }
+    #         )
+    #     return value
 
     def validate_cooking_time(self, value):
         """Валидация поля cooking_time."""
