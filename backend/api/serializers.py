@@ -157,7 +157,7 @@ class CreateUpdateDeleteRecipeSerializer(serializers.ModelSerializer):
                 'Повторение ингредиентов не допускается.'
             )
         return data
-    
+
     @transaction.atomic
     def create(self, validated_data):
         """Создание рецептов."""
